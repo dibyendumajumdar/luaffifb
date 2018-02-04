@@ -1,35 +1,40 @@
-[![Build Status](https://travis-ci.org/facebook/luaffifb.svg?branch=master)](https://travis-ci.org/facebook/luaffifb)
-
 About
 -----
-This is a library for calling C function and manipulating C types from lua. It
-is designed to be interface compatible with the FFI library in LuaJIT (see
-http://luajit.org/ext_ffi.html). It can parse C function declarations and
-struct definitions that have been directly copied out of C header files and
+This is a library for calling C function and manipulating C types from [Ravi](https://github.com/dibyendumajumdar/ravi). It
+is designed to be interface compatible with the FFI library in [LuaJIT's ffi](http://luajit.org/ext_ffi.html). 
+It can parse C function declarations and struct definitions that have been directly copied out of C header files and
 into lua source as a string.
 
-This is a fork of https://github.com/jmckaskill/luaffi
+This project is a fork of https://github.com/facebook/luaffifb which is a fork of https://github.com/jmckaskill/luaffi.
 
 Source
 ------
-https://github.com/facebook/luaffifb
+https://github.com/dibyendumajumdar/ravi-ffi
 
 Platforms
 ---------
-Currently supported:
-- Linux x86/x64
-- OS X x86/x64
+Currently being developed for:
+- Linux x64
+- OS X x64
+- Windows 10 x64
 
-Runs with Lua 5.1, 5.2, and 5.3
+Aim is to run for Ravi 5.3, but may also work for Lua 5.3. However at present this is work in progress.
 
 Build
 -----
-In a terminal:
+This project requires:
+
+* CMake installation
+* Ravi 5.3 installation
+
+Steps on Windows 10 using Visual Studio 2017:
 
 ```bash
-git clone https://github.com/facebook/luaffifb
-cd luaffifb
-luarocks make
+git clone https://github.com/dibyendumajumdar/ravi-ffi
+cd ravi-ffi
+mkdir build
+cd buld
+cmake .. -G "Visual Studio 15 2017 Win64"
 ```
 
 Documentation
