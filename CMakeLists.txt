@@ -1,11 +1,14 @@
-# This CMake script is based on the LuaJIT one created by:
-# Copyright (C) 2007-2013 LuaDist.
+# CMake script for building ravi-ffi
+# Copyright (C) 2018 Dibyendu Majumdar
+#
+# Contains material from LuaDist project
+# Copyright (C) 2012 LuaDist.
 # Created by Peter Drahoš
 # Redistribution and use of this file is allowed according to the terms of the MIT license.
 # For details see the COPYRIGHT file distributed with LuaDist.
 # Please note that the package source code is licensed under its own license.
 
-project ( luaffi C )
+project ( ravi_ffi C )
 cmake_minimum_required ( VERSION 2.8 )
 
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake" )
@@ -36,33 +39,32 @@ target_link_libraries ( minilua ${LIBS} )
 include_directories( ${LUA_INCLUDE_DIRS} )
 include_directories( ${DASM_DIR} )
 
-add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/call_x86.h
-	COMMAND minilua ${DASM} -LN -D X32WIN -o ${CMAKE_SOURCE_DIR}/call_x86.h ${CMAKE_SOURCE_DIR}/call_x86.dasc
-	DEPENDS minilua ${CMAKE_SOURCE_DIR}/call_x86.dasc
-)
-add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/call_x64.h
-	COMMAND minilua ${DASM} -LN -D X64 -o ${CMAKE_SOURCE_DIR}/call_x64.h ${CMAKE_SOURCE_DIR}/call_x86.dasc
-	DEPENDS minilua ${CMAKE_SOURCE_DIR}/call_x86.dasc
-)
-add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/call_x64win.h
-	COMMAND minilua ${DASM} -LN -D X64 -D X64WIN -o ${CMAKE_SOURCE_DIR}/call_x64win.h ${CMAKE_SOURCE_DIR}/call_x86.dasc
-	DEPENDS minilua ${CMAKE_SOURCE_DIR}/call_x86.dasc
-)
-add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/call_arm.h
-	COMMAND minilua ${DASM} -LN -o ${CMAKE_SOURCE_DIR}/call_arm.h ${CMAKE_SOURCE_DIR}/call_arm.dasc
-	DEPENDS minilua ${CMAKE_SOURCE_DIR}/call_arm.dasc
-)
-
 if (CMAKE_SYSTEM_PROCESSOR MATCHES "(x86)|(X86)|(amd64)|(AMD64)")
+	add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/call_x86.h
+		COMMAND minilua ${DASM} -LN -D X32WIN -o ${CMAKE_SOURCE_DIR}/call_x86.h ${CMAKE_SOURCE_DIR}/call_x86.dasc
+		DEPENDS minilua ${CMAKE_SOURCE_DIR}/call_x86.dasc
+	)
+	add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/call_x64.h
+		COMMAND minilua ${DASM} -LN -D X64 -o ${CMAKE_SOURCE_DIR}/call_x64.h ${CMAKE_SOURCE_DIR}/call_x86.dasc
+		DEPENDS minilua ${CMAKE_SOURCE_DIR}/call_x86.dasc
+	)
+	add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/call_x64win.h
+		COMMAND minilua ${DASM} -LN -D X64 -D X64WIN -o ${CMAKE_SOURCE_DIR}/call_x64win.h ${CMAKE_SOURCE_DIR}/call_x86.dasc
+		DEPENDS minilua ${CMAKE_SOURCE_DIR}/call_x86.dasc
+	)
 	set (CALL_HEADERS
 		${CMAKE_SOURCE_DIR}/call_x86.h
 		${CMAKE_SOURCE_DIR}/call_x64.h
 		${CMAKE_SOURCE_DIR}/call_x64win.h
-		)
+	)
 elseif (CMAKE_SYSTEM_PROCESSOR MATCHES "arm")
+	add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/call_arm.h
+		COMMAND minilua ${DASM} -LN -o ${CMAKE_SOURCE_DIR}/call_arm.h ${CMAKE_SOURCE_DIR}/call_arm.dasc
+		DEPENDS minilua ${CMAKE_SOURCE_DIR}/call_arm.dasc
+	)
 	set (CALL_HEADERS
 		${CMAKE_SOURCE_DIR}/call_arm.h
-		)
+	)
 else()
 	# message()
 endif()
@@ -77,14 +79,14 @@ set (SRCS
 	ffi.c 
 	parser.c)
 
-add_library(raviffi SHARED 
+add_library(ravi_ffi SHARED 
 	${HEADERS}
 	${SRCS} )
 target_link_libraries(raviffi ${LUA_LIBRARIES}) 
 
 if (MSVC)
-	add_library(testffi SHARED 
+	add_library(ravi_ffi_testcdecl SHARED 
 		test.c)
 	set_source_files_properties(test.c PROPERTIES COMPILE_FLAGS /Gd)
-	target_link_libraries(raviffi ${LUA_LIBRARIES}) 
+	target_link_libraries(ravi_ffi ${LUA_LIBRARIES}) 
 endif()
