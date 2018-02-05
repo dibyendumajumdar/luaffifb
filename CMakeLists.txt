@@ -82,7 +82,7 @@ set (SRCS
 add_library(ravi_ffi SHARED 
 	${HEADERS}
 	${SRCS} )
-target_link_libraries(raviffi ${LUA_LIBRARIES}) 
+target_link_libraries(ravi_ffi ${LUA_LIBRARIES}) 
 
 if (MSVC)
 	add_library(ravi_ffi_testcdecl SHARED 
