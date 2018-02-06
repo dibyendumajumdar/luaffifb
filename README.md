@@ -33,9 +33,11 @@ Steps on Windows 10 using Visual Studio 2017:
 git clone https://github.com/dibyendumajumdar/ravi-ffi
 cd ravi-ffi
 mkdir build
-cd buld
+cd build
 cmake .. -G "Visual Studio 15 2017 Win64"
 ```
+
+Above creates Visual Studio projects which can be used to build.
 
 Documentation
 -------------
