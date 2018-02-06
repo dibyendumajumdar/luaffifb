@@ -29,15 +29,17 @@ This project requires:
 
 Steps on Windows 10 using Visual Studio 2017:
 
+We assume that Ravi was installed under `c:/Software/ravi`.
+
 ```bash
 git clone https://github.com/dibyendumajumdar/ravi-ffi
 cd ravi-ffi
 mkdir build
 cd build
-cmake .. -G "Visual Studio 15 2017 Win64"
+cmake -DCMAKE_INSTALL_PREFIX=/Software/Ravi -G "Visual Studio 15 2017 Win64" ..
 ```
 
-Above creates Visual Studio projects which can be used to build.
+Above creates Visual Studio projects which can be used to build and install. Note that the install prefix ensures that the DLL files will be installed under /Software/ravi/bin so that they can be found by the library.
 
 Documentation
 -------------
