@@ -67,7 +67,7 @@ struct jit;
 # define EXPORT
 #endif
 
-EXTERN_C EXPORT int luaopen_ffi(lua_State* L);
+EXTERN_C EXPORT int luaopen_ravi_ffi(lua_State* L);
 
 static int lua_absindex2(lua_State* L, int idx) {
     return (LUA_REGISTRYINDEX <= idx && idx < 0)

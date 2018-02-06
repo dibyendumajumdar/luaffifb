@@ -8,7 +8,7 @@
 # For details see the COPYRIGHT file distributed with LuaDist.
 # Please note that the package source code is licensed under its own license.
 
-project ( ravi_ffi C )
+project ( ravi-ffi C )
 cmake_minimum_required ( VERSION 2.8 )
 
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake" )
@@ -29,7 +29,6 @@ endif ()
 if (MSVC)
 	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 	add_definitions(-DLUA_FFI_BUILD_AS_DLL)
-	add_definitions(-DLUA_DLL_NAME=libravinojit.dll)
 endif()
 
 # Build minilua
@@ -79,14 +78,23 @@ set (SRCS
 	ffi.c 
 	parser.c)
 
-add_library(ravi_ffi SHARED 
+add_library(ffi SHARED 
 	${HEADERS}
 	${SRCS} )
-target_link_libraries(ravi_ffi ${LUA_LIBRARIES}) 
+target_link_libraries(ffi ${LUA_LIBRARIES}) 
 
-if (MSVC)
-	add_library(ravi_ffi_testcdecl SHARED 
+add_library(libtest SHARED 
 		test.c)
+if (MSVC)
 	set_source_files_properties(test.c PROPERTIES COMPILE_FLAGS /Gd)
-	target_link_libraries(ravi_ffi ${LUA_LIBRARIES}) 
 endif()
+target_link_libraries(libtest ffi) 
+
+install(TARGETS ffi
+        RUNTIME DESTINATION bin/ravi
+        ARCHIVE DESTINATION lib
+		LIBRARY DESTINATION lib/ravi)
+
+install(TARGETS libtest
+        RUNTIME DESTINATION bin/ravi/ffi
+        LIBRARY DESTINATION lib/ravi/ffi)

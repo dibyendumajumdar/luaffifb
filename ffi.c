@@ -3469,7 +3469,7 @@ static void setup_mt(lua_State* L, const luaL_Reg* mt, int upvals)
     luaL_setfuncs(L, mt, upvals);
 }
 
-int luaopen_ffi(lua_State* L)
+int luaopen_ravi_ffi(lua_State* L)
 {
     lua_settop(L, 0);
 

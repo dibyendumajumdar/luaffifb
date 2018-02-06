@@ -7,7 +7,7 @@
 -- of patent rights can be found in the PATENTS file in the same directory.
 --
 io.stdout:setvbuf('no')
-local ffi = require 'ffi'
+local ffi = require 'ravi.ffi'
 local dlls = {}
 
 local function loadlib(lib)
@@ -24,7 +24,7 @@ end
 if _VERSION == 'Lua 5.1' then
     dlls.__cdecl = loadlib('ffi/libtest')
 else
-    dlls.__cdecl = ffi.load(package.searchpath('ffi.libtest', package.cpath))
+    dlls.__cdecl = ffi.load(package.searchpath('ravi.ffi.libtest', package.cpath))
 end
 
 if ffi.arch == 'x86' and ffi.os == 'Windows' then
@@ -750,7 +750,7 @@ __attribute__((dllimport)) void __attribute__((__cdecl__)) alEnable( ALenum capa
 check(ffi.sizeof('struct {char foo[alignof(uint64_t)];}'), ffi.alignof('uint64_t'))
 
 -- Check native number type for int64_t/uint64_t function args/returns in Lua 5.3
-if _VERSION == "Lua 5.3" then
+if _VERSION == "Lua 5.3" or _VERSION == "Ravi 5.3" then
     local native_7F = 0x7FFFFFFFFFFFFFFF
     local cdata_long_7F =  ffi.new("int64_t",  0x7FFFFFFFFFFFFFFF)
     local cdata_ulong_7F = ffi.new("uint64_t", 0x7FFFFFFFFFFFFFFF)
