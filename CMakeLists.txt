@@ -22,6 +22,7 @@ set ( DASM ${DASM_DIR}/dynasm.lua )
 
 if ( APPLE )
 	list ( APPEND LIBS m )
+	add_definitions( -DLUA_USE_MACOSX )
 elseif ( NOT WIN32 )
 	list ( APPEND LIBS m )
 endif ()
@@ -82,6 +83,7 @@ add_library(ffi SHARED
 	${HEADERS}
 	${SRCS} )
 target_link_libraries(ffi ${LUA_LIBRARIES}) 
+set_target_properties(ffi PROPERTIES PREFIX "")
 
 add_library(libtest SHARED 
 		test.c)
@@ -89,6 +91,7 @@ if (MSVC)
 	set_source_files_properties(test.c PROPERTIES COMPILE_FLAGS /Gd)
 endif()
 target_link_libraries(libtest ffi) 
+set_target_properties(libtest PROPERTIES PREFIX "")
 
 install(TARGETS ffi
         RUNTIME DESTINATION bin/ravi
