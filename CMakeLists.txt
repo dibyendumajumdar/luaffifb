@@ -31,6 +31,7 @@ endif ()
 if (MSVC)
 	add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
 	add_definitions(-DLUA_FFI_BUILD_AS_DLL)
+	add_definitions(-D_CRT_STDIO_INLINE=__declspec\(dllexport\)__inline)
 endif()
 
 if (MSVC)
