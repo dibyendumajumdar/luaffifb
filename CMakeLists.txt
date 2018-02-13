@@ -13,7 +13,7 @@ cmake_minimum_required ( VERSION 2.8 )
 
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake" )
 
-find_package(Ravi REQUIRED)
+find_package(Lua REQUIRED)
 
 set( DASM_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dynasm )
 
@@ -25,18 +25,48 @@ if ( APPLE )
 	add_definitions( -DLUA_USE_MACOSX )
 elseif ( NOT WIN32 )
 	list ( APPEND LIBS m )
+	add_definitions( -DLUA_USE_LINUX )
 endif ()
 
 if (MSVC)
-	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+	add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
 	add_definitions(-DLUA_FFI_BUILD_AS_DLL)
 endif()
+
+if (MSVC)
+    set(CMAKE_C_FLAGS_DEBUG "/Od /D_DEBUG /MDd /Zi /RTC1 /EHsc")
+    set(CMAKE_C_FLAGS_RELEASE "/DNDEBUG /O2 /MD /EHsc")
+    set(CMAKE_C_FLAGS_RELWITHDEBINFO "/DNDEBUG /O2 /MD /Zi /EHsc")
+    set(CMAKE_C_FLAGS_MINSIZEREL "/DNDEBUG /O2 /MD /EHsc")
+
+    set(CMAKE_CXX_FLAGS "/EHsc")
+    set(CMAKE_CXX_FLAGS_DEBUG "/Od /D_DEBUG /MDd /Zi /RTC1 /EHsc")
+    set(CMAKE_CXX_FLAGS_RELEASE "/DNDEBUG /O2 /MD /EHsc")
+    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "/DNDEBUG /O2 /MD /Zi /EHsc")
+    set(CMAKE_CXX_FLAGS_MINSIZEREL "/DNDEBUG /O2 /MD /EHsc")
+
+    # Disable signed/unsigned int conversion warnings.
+    add_definitions("/wd4018")
+    # Disable warning about using struct/class for the same symobl.
+    add_definitions("/wd4099")
+    # Disable performance warning about int-to-bool conversion.
+    add_definitions("/wd4800")
+    # Disable signed/unsigned int conversion warnings.
+    add_definitions("/wd4018")
+    # Disable warning about the insecurity of using "std::copy".
+    add_definitions("/wd4996")
+    add_definitions("/wd4291")
+    add_definitions("/wd4624")
+    add_definitions("/wd4141")
+    add_definitions("/DLUA_COMPAT_5_2")
+    add_definitions("/DLUA_COMPAT_5_1")
+endif ()
 
 # Build minilua
 add_executable ( minilua minilua.c )
 target_link_libraries ( minilua ${LIBS} )
 
-include_directories( ${LUA_INCLUDE_DIRS} )
+include_directories( ${LUA_INCLUDE_DIR} )
 include_directories( ${DASM_DIR} )
 
 if (CMAKE_SYSTEM_PROCESSOR MATCHES "(x86)|(X86)|(amd64)|(AMD64)")
@@ -94,10 +124,10 @@ target_link_libraries(libtest ffi)
 set_target_properties(libtest PROPERTIES PREFIX "")
 
 install(TARGETS ffi
-        RUNTIME DESTINATION bin/ravi
+        RUNTIME DESTINATION bin
         ARCHIVE DESTINATION lib
-		LIBRARY DESTINATION lib/ravi)
+		LIBRARY DESTINATION lib)
 
 install(TARGETS libtest
-        RUNTIME DESTINATION bin/ravi/ffi
-        LIBRARY DESTINATION lib/ravi/ffi)
+        RUNTIME DESTINATION bin/ffi
+        LIBRARY DESTINATION lib/ffi)

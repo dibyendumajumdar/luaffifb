@@ -7,7 +7,7 @@
 -- of patent rights can be found in the PATENTS file in the same directory.
 --
 io.stdout:setvbuf('no')
-local ffi = require 'ravi.ffi'
+local ffi = require 'ffi'
 local dlls = {}
 
 local function loadlib(lib)
@@ -24,7 +24,7 @@ end
 if _VERSION == 'Lua 5.1' then
     dlls.__cdecl = loadlib('ffi/libtest')
 else
-    dlls.__cdecl = ffi.load(package.searchpath('ravi.ffi.libtest', package.cpath))
+    dlls.__cdecl = ffi.load(package.searchpath('ffi.libtest', package.cpath))
 end
 
 if ffi.arch == 'x86' and ffi.os == 'Windows' then

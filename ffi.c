@@ -13,6 +13,10 @@
 /* Set to 1 to get extra debugging on print */
 #define DEBUG_TOSTRING 0
 
+#ifndef RAVI_ENABLED
+#error Ravi must be enabled
+#endif
+
 int jit_key;
 int ctype_mt_key;
 int cdata_mt_key;
@@ -3213,22 +3217,26 @@ static int setup_upvals(lua_State* L)
         memset(libs, 0, sz);
 
         /* exe */
-        GetModuleHandle(NULL);
+        GetModuleHandleExA(GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, NULL, &libs[0]);
         /* lua dll */
-#ifdef LUA_DLL_NAME
+#if defined(LUA_DLL_NAME) && !defined(RAVI_ENABLED)
 #define STR2(tok) #tok
 #define STR(tok) STR2(tok)
         libs[1] = LoadLibraryA(STR(LUA_DLL_NAME));
 #undef STR
 #undef STR2
+#elif defined(RAVI_ENABLED)
+        GetModuleHandleExA(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+            (const char *)&lua_newstate, &libs[1]);
 #endif
 
         /* crt */
 #ifdef UNDER_CE
         libs[2] = LoadLibraryA("coredll.dll");
 #else
-        GetModuleHandleExA(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS, (char*) &_fmode, &libs[2]);
-        libs[3] = LoadLibraryA("kernel32.dll");
+        GetModuleHandleExA(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+            (const char *)&_fmode, &libs[2]);
+		libs[3] = LoadLibraryA("kernel32.dll");
         libs[4] = LoadLibraryA("user32.dll");
         libs[5] = LoadLibraryA("gdi32.dll");
 #endif
@@ -3469,7 +3477,7 @@ static void setup_mt(lua_State* L, const luaL_Reg* mt, int upvals)
     luaL_setfuncs(L, mt, upvals);
 }
 
-int luaopen_ravi_ffi(lua_State* L)
+int luaopen_ffi(lua_State* L)
 {
     lua_settop(L, 0);
 

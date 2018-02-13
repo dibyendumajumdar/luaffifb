@@ -1,13 +1,9 @@
 /*
 ** This file has been pre-processed with DynASM.
 ** http://luajit.org/dynasm.html
-** DynASM version 1.3.0, DynASM x86 version 1.3.0
-** DO NOT EDIT! The original file is in "call_x86.dasc".
+** DynASM version 1.4.0, DynASM x86 version 1.4.0
+** DO NOT EDIT! The original file is in "C:/work/github/ravi-ffi/call_x86.dasc".
 */
-
-#if DASM_VERSION != 10300
-#error "Version mismatch between DynASM and included encoding engine"
-#endif
 
 /* vim: ts=4 sw=4 sts=4 et tw=78
  * Portions copyright (c) 2015-present, Facebook, Inc. All rights reserved.
@@ -17,6 +13,9 @@
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
  */
+#if DASM_VERSION != 10400
+#error "Version mismatch between DynASM and included encoding engine"
+#endif
 
 static const unsigned char build_actionlist[1915] = {
   139,141,233,255,139,141,233,139,149,233,255,137,132,253,36,233,255,137,132,
@@ -84,7 +83,7 @@ static const unsigned char build_actionlist[1915] = {
   251,1,18,255,199,68,36,4,237,137,60,36,232,251,1,17,255,199,68,36,4,237,137,
   60,36,232,251,1,17,137,4,36,217,4,36,255,137,20,36,217,4,36,255,137,224,129,
   192,239,137,68,36,12,137,116,36,8,199,68,36,4,237,137,60,36,232,251,1,22,
-  255,185,237,139,1,137,4,36,232,251,1,23,255,131,196,32,255,139,148,253,36,
+  255,185,237,139,1,137,4,36,232,251,1,23,255,131,196,28,255,139,148,253,36,
   233,255,139,12,36,255,129,196,239,255,232,251,1,24,131,252,236,48,255,137,
   68,36,32,232,251,1,25,185,237,137,1,199,68,36,8,237,199,68,36,4,237,137,60,
   36,232,251,1,1,139,76,36,32,137,8,184,1,0,0,0,139,117,252,248,139,125,252,
@@ -210,6 +209,8 @@ void compile_globals(struct jit* jit, lua_State* L)
     /* Note the various call_* functions want 32 bytes of 16 byte aligned
      * stack
      */
+
+
 
     compile(Dst, L, NULL, LUA_NOREF);
 }
