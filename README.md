@@ -14,11 +14,11 @@ https://github.com/dibyendumajumdar/ravi-ffi
 Platforms
 ---------
 Currently being developed for:
-- Linux x64
-- OS X x64
-- Windows 10 x64
+- Linux x64 - to do
+- OS X x64 - builds and tests pass
+- Windows 10 x64 - builds but tests fail because ffi.C.sprintf cannot be resolved
 
-Aim is to run for Ravi 5.3, but may also work for Lua 5.3. However at present this is work in progress.
+Aim is to run for Ravi / Lua 5.3. 
 
 Build
 -----
@@ -27,9 +27,12 @@ This project requires:
 * CMake installation
 * Ravi 5.3 installation
 
-Steps on Windows 10 using Visual Studio 2017:
+Windows 10
+----------
+* Note that only Visual Studio 2017 is supported. 
+* Note that only x86-64 is supported
 
-We assume that Ravi was installed under `c:/Software/ravi`.
+In the instructions below, we assume that Ravi was installed under `c:/Software/ravi`.
 
 ```bash
 git clone https://github.com/dibyendumajumdar/ravi-ffi
