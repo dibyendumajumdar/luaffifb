@@ -757,21 +757,23 @@ if _VERSION == "Lua 5.3" or _VERSION == "Ravi 5.3" then
 
     local native_80 = 0x8000000000000000
 
-    for _, func in ipairs{ffi.C.add_i64, ffi.C.add_u64} do
-        -- 0x7FFFFFFFFFFFFFFF (native)         + 1 == 0x8000000000000000 (native)
-        local res = func(native_7F, 1)
-        assert(type(res) == "number", "native_7F: returned value not a number")
-        assert(res == native_80, "native_7F: math error")
+    for _, c in pairs(dlls) do
+        for _, func in ipairs{c.add_i64, c.add_u64} do
+            -- 0x7FFFFFFFFFFFFFFF (native)         + 1 == 0x8000000000000000 (native)
+            local res = func(native_7F, 1)
+            assert(type(res) == "number", "native_7F: returned value not a number")
+            assert(res == native_80, "native_7F: math error")
 
-        -- 0x7FFFFFFFFFFFFFFF (cdata int64_t)  + 1 == 0x8000000000000000 (native)
-        local res = func(cdata_long_7F, 1)
-        assert(type(res) == "number", "cdata_long_7F: returned value not a number")
-        assert(res == native_80, "cdata_long_7F: math error")
+            -- 0x7FFFFFFFFFFFFFFF (cdata int64_t)  + 1 == 0x8000000000000000 (native)
+            local res = func(cdata_long_7F, 1)
+            assert(type(res) == "number", "cdata_long_7F: returned value not a number")
+            assert(res == native_80, "cdata_long_7F: math error")
 
-        -- 0x7FFFFFFFFFFFFFFF (cdata uint64_t) + 1 == 0x8000000000000000 (native)
-        local res = func(cdata_ulong_7F, 1)
-        assert(type(res) == "number", "cdata_ulong_7F: returned value not a number")
-        assert(res == native_80, "cdata_ulong_7F: math error")
+            -- 0x7FFFFFFFFFFFFFFF (cdata uint64_t) + 1 == 0x8000000000000000 (native)
+            local res = func(cdata_ulong_7F, 1)
+            assert(type(res) == "number", "cdata_ulong_7F: returned value not a number")
+            assert(res == native_80, "cdata_ulong_7F: math error")
+        end
     end
 end
 
@@ -927,31 +929,34 @@ void test_call_pppppiifiii(void* p1, void* p2, void* p3, void* p4, void* p5, int
 void test_call_pppppiiifii(void* p1, void* p2, void* p3, void* p4, void* p5, int i1, int i2, int i3, float i4, int i5, int i6);
 ]]
 
-ffi.C.test_call_echo("input")
-assert(ffi.C.buf == "input")
+for _, c in pairs(dlls) do
+    c.test_call_echo("input")
+    assert(c.buf == "input")
 
-local function ptr(x) return ffi.new('void*', x) end
+    local function ptr(x) return ffi.new('void*', x) end
 
-ffi.C.test_call_pppppii(ptr(1), ptr(2), ptr(3), ptr(4), ptr(5), 6, 7)
-assert(ffi.C.buf == "0x1 0x2 0x3 0x4 0x5 6 7")
+    c.test_call_pppppii(ptr(1), ptr(2), ptr(3), ptr(4), ptr(5), 6, 7)
+    assert(c.buf == "1 2 3 4 5 6 7")
 
-ffi.C.test_call_pppppiiiiii(ptr(1), ptr(2), ptr(3), ptr(4), ptr(5), 6, 7, 8, 9, 10, 11)
-assert(ffi.C.buf == "0x1 0x2 0x3 0x4 0x5 6 7 8 9 10 11")
+    c.test_call_pppppiiiiii(ptr(1), ptr(2), ptr(3), ptr(4), ptr(5), 6, 7, 8, 9, 10, 11)
+    assert(c.buf == "1 2 3 4 5 6 7 8 9 10 11")
 
-ffi.C.test_call_pppppffffff(ptr(1), ptr(2), ptr(3), ptr(4), ptr(5), 6.5, 7.5, 8.5, 9.5, 10.5, 11.5)
-assert(ffi.C.buf == "0x1 0x2 0x3 0x4 0x5 6.5 7.5 8.5 9.5 10.5 11.5")
+    c.test_call_pppppffffff(ptr(1), ptr(2), ptr(3), ptr(4), ptr(5), 6.5, 7.5, 8.5, 9.5, 10.5, 11.5)
+    print(c.buf)
+    assert(c.buf == "1 2 3 4 5 6.5 7.5 8.5 9.5 10.5 11.5")
 
-ffi.C.test_call_pppppiifiii(ptr(1), ptr(2), ptr(3), ptr(4), ptr(5), 6, 7, 8.5, 9, 10, 11)
-assert(ffi.C.buf == "0x1 0x2 0x3 0x4 0x5 6 7 8.5 9 10 11")
+    c.test_call_pppppiifiii(ptr(1), ptr(2), ptr(3), ptr(4), ptr(5), 6, 7, 8.5, 9, 10, 11)
+    assert(c.buf == "1 2 3 4 5 6 7 8.5 9 10 11")
 
-ffi.C.test_call_pppppiiifii(ptr(1), ptr(2), ptr(3), ptr(4), ptr(5), 6, 7, 8, 9.5, 10, 11)
-assert(ffi.C.buf == "0x1 0x2 0x3 0x4 0x5 6 7 8 9.5 10 11")
+    c.test_call_pppppiiifii(ptr(1), ptr(2), ptr(3), ptr(4), ptr(5), 6, 7, 8, 9.5, 10, 11)
+    assert(c.buf == "1 2 3 4 5 6 7 8 9.5 10 11")
 
-local sum = ffi.C.add_dc(ffi.new('complex', 1, 2), ffi.new('complex', 3, 5))
-assert(ffi.istype('complex', sum))
+    local sum = c.add_dc(ffi.new('complex', 1, 2), ffi.new('complex', 3, 5))
+    assert(ffi.istype('complex', sum))
 
-sum = ffi.C.add_fc(ffi.new('complex float', 1, 2), ffi.new('complex float', 3, 5))
-assert(ffi.istype('complex float', sum))
+    sum = c.add_fc(ffi.new('complex float', 1, 2), ffi.new('complex float', 3, 5))
+    assert(ffi.istype('complex float', sum))
+end
 
 ffi.cdef [[
 struct Arrays {
