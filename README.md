@@ -16,9 +16,9 @@ Platforms
 Currently being developed for:
 - Linux x64 - to do
 - OS X x64 - builds and tests pass
-- Windows 10 x64 - builds but tests fail because ffi.C.sprintf cannot be resolved
+- Windows 10 x64 - builds and tests pass
 
-Aim is to run for Ravi / Lua 5.3. 
+Aim is to support both Ravi and Lua 5.3. 
 
 Build
 -----
