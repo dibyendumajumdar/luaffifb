@@ -13,10 +13,6 @@
 /* Set to 1 to get extra debugging on print */
 #define DEBUG_TOSTRING 0
 
-#ifndef RAVI_ENABLED
-#error Ravi must be enabled
-#endif
-
 int jit_key;
 int ctype_mt_key;
 int cdata_mt_key;
