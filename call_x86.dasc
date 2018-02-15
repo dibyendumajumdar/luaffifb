@@ -496,17 +496,24 @@ static void get_int(Dst_DECL, const struct ctype* ct, struct reg_alloc* reg, int
         reg->ints++;
     }
 #endif
-    else if (is_int64) {
-        |.if X64
-        | mov rcx, [rbp + reg->off]
-        |.else
-        | mov rcx, [rbp + reg->off]
-        | mov rdx, [rbp + reg->off + 4]
-        |.endif
-        reg->off += 8;
-    } else {
-        | mov ecx, [rbp + reg->off]
-        reg->off += 4;
+    else {
+#if defined _WIN64 || defined __amd64__
+        if (reg->off % 8 != 0) {
+            reg->off += 8 - (reg->off % 8);
+        }
+#endif
+        if (is_int64) {
+            |.if X64
+            | mov rcx, [rbp + reg->off]
+            |.else
+            | mov rcx, [rbp + reg->off]
+            | mov rdx, [rbp + reg->off + 4]
+            |.endif
+            reg->off += 8;
+        } else {
+            | mov ecx, [rbp + reg->off]
+            reg->off += 4;
+        }
     }
 }
 
@@ -575,7 +582,12 @@ static void get_float(Dst_DECL, const struct ctype* ct, struct reg_alloc* reg, i
     }
 #endif
     else {
-        off = reg->off;
+#if defined _WIN64 || defined __amd64__
+        if (reg->off % 8 != 0) {
+            reg->off += 8 - (reg->off % 8);
+        }
+#endif
+        off = reg->off;        
         reg->off += is_double ? 8 : 4;
     }
 
@@ -621,14 +633,20 @@ static void add_float(Dst_DECL, const struct ctype* ct, struct reg_alloc* reg, i
         reg->floats++;
     }
 #endif
-
-    else if (is_double) {
-        | movq qword [rsp + reg->off], xmm0
-        reg->off += 8;
-    } else {
-        | cvtsd2ss xmm0, xmm0
-        | movd dword [rsp + reg->off], xmm0
-        reg->off += 4;
+    else {
+#if defined _WIN64 || defined __amd64__
+        if (reg->off % 8 != 0) {
+            reg->off += 8 - (reg->off % 8);
+        }
+#endif    
+        if (is_double) {
+            | movq qword [rsp + reg->off], xmm0
+            reg->off += 8;
+        } else {
+            | cvtsd2ss xmm0, xmm0
+            | movd dword [rsp + reg->off], xmm0
+            reg->off += 4;
+        }
     }
 #endif
 }

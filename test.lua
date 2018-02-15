@@ -942,7 +942,6 @@ for _, c in pairs(dlls) do
     assert(c.buf == "1 2 3 4 5 6 7 8 9 10 11")
 
     c.test_call_pppppffffff(ptr(1), ptr(2), ptr(3), ptr(4), ptr(5), 6.5, 7.5, 8.5, 9.5, 10.5, 11.5)
-    print(c.buf)
     assert(c.buf == "1 2 3 4 5 6.5 7.5 8.5 9.5 10.5 11.5")
 
     c.test_call_pppppiifiii(ptr(1), ptr(2), ptr(3), ptr(4), ptr(5), 6, 7, 8.5, 9, 10, 11)
@@ -951,11 +950,13 @@ for _, c in pairs(dlls) do
     c.test_call_pppppiiifii(ptr(1), ptr(2), ptr(3), ptr(4), ptr(5), 6, 7, 8, 9.5, 10, 11)
     assert(c.buf == "1 2 3 4 5 6 7 8 9.5 10 11")
 
-    local sum = c.add_dc(ffi.new('complex', 1, 2), ffi.new('complex', 3, 5))
-    assert(ffi.istype('complex', sum))
+    if c.have_complex() then
+        local sum = c.add_dc(ffi.new('complex', 1, 2), ffi.new('complex', 3, 5))
+        assert(ffi.istype('complex', sum))
 
-    sum = c.add_fc(ffi.new('complex float', 1, 2), ffi.new('complex float', 3, 5))
-    assert(ffi.istype('complex float', sum))
+        sum = c.add_fc(ffi.new('complex float', 1, 2), ffi.new('complex float', 3, 5))
+        assert(ffi.istype('complex float', sum))
+    end
 end
 
 ffi.cdef [[
