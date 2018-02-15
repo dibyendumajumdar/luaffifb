@@ -3215,13 +3215,13 @@ static int setup_upvals(lua_State* L)
         /* exe */
         GetModuleHandleExA(GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, NULL, &libs[0]);
         /* lua dll */
-#if defined(LUA_DLL_NAME) && !defined(RAVI_ENABLED)
+#if defined(LUA_DLL_NAME)
 #define STR2(tok) #tok
 #define STR(tok) STR2(tok)
         libs[1] = LoadLibraryA(STR(LUA_DLL_NAME));
 #undef STR
 #undef STR2
-#elif defined(RAVI_ENABLED)
+#else
         GetModuleHandleExA(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
             (const char *)&lua_newstate, &libs[1]);
 #endif
