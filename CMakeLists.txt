@@ -120,6 +120,9 @@ add_library(ffi SHARED
 	${SRCS} )
 target_link_libraries(ffi ${LUA_LIBRARIES}) 
 set_target_properties(ffi PROPERTIES PREFIX "")
+if (APPLE)
+	set_target_properties(ffi PROPERTIES LINK_FLAGS "-undefined dynamic_lookup")
+endif()
 
 add_library(libtest SHARED 
 		test.c)
@@ -128,6 +131,9 @@ if (MSVC)
 endif()
 target_link_libraries(libtest ffi) 
 set_target_properties(libtest PROPERTIES PREFIX "")
+if (APPLE)
+	set_target_properties(libtest PROPERTIES LINK_FLAGS "-undefined dynamic_lookup")
+endif()
 
 install(TARGETS ffi
         RUNTIME DESTINATION bin
