@@ -143,3 +143,6 @@ install(TARGETS ffi
 install(TARGETS libtest
         RUNTIME DESTINATION bin/ffi
         LIBRARY DESTINATION lib/ffi)
+
+install(TARGETS minilua
+        RUNTIME DESTINATION bin)
