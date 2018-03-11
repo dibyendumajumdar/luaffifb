@@ -146,3 +146,5 @@ install(TARGETS libtest
 
 install(TARGETS minilua
         RUNTIME DESTINATION bin)
+
+INSTALL(FILES "test.lua" DESTINATION "${LUADIR}/ffi")
