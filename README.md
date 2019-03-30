@@ -14,11 +14,11 @@ https://github.com/dibyendumajumdar/ravi-ffi
 Platforms
 ---------
 Currently being developed for:
-- Linux x64 - to do
+- Linux x64 - builds and tests pass
 - OS X x64 - builds and tests pass
 - Windows 10 x64 - builds and tests pass
 
-Aim is to support both Ravi and Lua 5.3. 
+Ravi and Lua 5.3 are supported. 
 
 Build
 -----
@@ -43,6 +43,12 @@ cmake -DCMAKE_INSTALL_PREFIX=/Software/Ravi -G "Visual Studio 15 2017 Win64" ..
 ```
 
 Above creates Visual Studio projects which can be used to build and install. Note that the install prefix ensures that the DLL files will be installed under /Software/ravi/bin so that they can be found by the library.
+
+To build for Lua, change above to:
+```
+cmake -DCMAKE_INSTALL_PREFIX=/Software/lua53 -DUSE_LUA53=ON -G "Visual Studio 15 2017 Win64" ..
+```
+This assumes Lua 5.3 installation under `/Software/lua53'.
 
 Documentation
 -------------
